@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESGAR 2026 Rectal MRI Staging Module</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --header-bg: #f5f5f5;
+            --accent-color: #0056b3;
+            --border-color: #cccccc;
+            --section-bg: #fafafa;
+            --textarea-bg: #ffffff;
+            --warning-bg: #fff3cd;
+            --warning-text: #856404;
+            --warning-border: #ffeeba;
+            --img-opacity: 1.0;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #ffffff;
+            --header-bg: #1e1e1e;
+            --accent-color: #00a2ff;
+            --border-color: #444444;
+            --section-bg: #1a1a1a;
+            --textarea-bg: #252525;
+            --warning-bg: #2c2512;
+            --warning-text: #ffdd75;
+            --warning-border: #4b3f1a;
+            --img-opacity: 0.85;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Ubuntu', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            background-color: var(--header-bg);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        [data-theme="dark"] h1 {
+            color: var(--accent-color);
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        select, button {
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1.9fr 1.1fr;
+            min-height: calc(100vh - 70px);
+        }
+
+        .left-column {
+            padding: 30px;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            max-height: calc(100vh - 70px);
+        }
+
+        .right-column {
+            padding: 30px;
+            background-color: var(--section-bg);
+            overflow-y: auto;
+            max-height: calc(100vh - 70px);
+        }
+
+        .right-column h2 {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .help-image-container {
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .help-image-container h3 {
+            margin: 0;
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .help-img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            opacity: var(--img-opacity);
+            transition: opacity 0.3s;
+        }
+
+        .section {
+            background-color: var(--section-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .section h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.15rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+            color: var(--accent-color);
+        }
+
+        .grid-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .sub-group-title {
+            font-weight: bold;
+            margin: 10px 0 5px 0;
+            grid-column: 1 / -1;
+            font-size: 0.95rem;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            line-height: 1.3;
+        }
+
+        .option-item input {
+            margin-top: 2px;
+        }
+
+        .input-text-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .input-text-item.block-layout {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .input-text-item input[type="text"], .input-text-item input[type="number"] {
+            padding: 5px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .input-text-item textarea {
+            width: 100%;
+            height: 80px;
+            margin-top: 5px;
+        }
+
+        .warning-box {
+            background-color: var(--warning-bg);
+            color: var(--warning-text);
+            border: 1px solid var(--warning-border);
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            grid-column: 1 / -1;
+        }
+
+        .output-area {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .report-box {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .report-box label {
+            font-weight: bold;
+            font-size: 1rem;
+            color: var(--accent-color);
+        }
+
+        .report-box textarea {
+            width: 100%;
+            height: 220px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--textarea-bg);
+            color: var(--text-color);
+            resize: vertical;
+            overflow: hidden; /* Ocultar scroll si redimensionamos automáticamente */
+        }
+
+        .actions-row {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            font-weight: bold;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+        }
+
+        .indent {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 id="main-title">ESGAR 2026 - Rectal Cancer Primary Staging</h1>
+        <div class="controls">
+            <select id="lang-select" onchange="changeLanguage()">
+                <option value="es">Español</option>
+                <option value="ca">Català</option>
+                <option value="en">English</option>
+            </select>
+            <button id="theme-toggle" onclick="toggleTheme()">🌓 Mode</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="left-column">
+            <form id="staging-form" onchange="generateReports()">
+                
+                <div class="section">
+                    <h2 data-i18n="sec-tumour-status">Estado Local del Tumor</h2>
+                    
+                    <div class="grid-group">
+                        <div class="sub-group-title" data-i18n="sub-morphology-comp">Composición</div>
+                        <label class="option-item"><input type="radio" name="composition" value="Solid"> <span data-i18n="opt-solid">Sólido</span></label>
+                        <label class="option-item"><input type="radio" name="composition" value="Mucinous"> <span data-i18n="opt-mucinous">Mucinoso</span></label>
+                        <label class="option-item"><input type="radio" name="composition" value="Mixed"> <span data-i18n="opt-mixed">Mixto</span></label>
+                        
+                        <div class="sub-group-title" data-i18n="sub-morphology-shape">Morfología</div>
+                        <label class="option-item"><input type="radio" name="shape" value="Polyp"> <span data-i18n="opt-polyp">Pólipo</span></label>
+                        <label class="option-item"><input type="radio" name="shape" value="Fully annular"> <span data-i18n="opt-annular">Completamente anular</span></label>
+                        <label class="option-item"><input type="radio" name="shape" value="Partly annular"> <span data-i18n="opt-part-annular">Parcialmente anular</span></label>
+                    </div>
+
+                    <div id="polyp-warning" class="warning-box" style="display:none;" data-i18n="warn-polyp">
+                        ⚠️ <strong>Aviso:</strong> La medida de la distancia del tumor a la unión anorrectal debería hacerse desde la raíz del pólipo.
+                    </div>
+
+                    <div class="input-text-item indent" id="partly-annular-hours" style="display:none;">
+                        <span data-i18n="lbl-hours">Extensión (en agujas del reloj):</span>
+                        <input type="text" id="shape-hours-from" placeholder="3" style="width: 80px;" oninput="generateReports()"> 
+                        <span data-i18n="lbl-to">a</span> 
+                        <input type="text" id="shape-hours-to" placeholder="7" style="width: 80px;" oninput="generateReports()">
+                    </div>
+
+                    <div class="sub-group-title" data-i18n="sub-location">Localización y Medidas</div>
+                    <div class="input-text-item">
+                        <span data-i18n="lbl-dist-arj">Distancia desde la unión anorrectal al borde inferior (cm):</span>
+                        <input type="text" id="dist-arj" style="width: 80px;" oninput="generateReports()">
+                    </div>
+                    <div class="input-text-item">
+                        <span data-i18n="lbl-dist-av">Distancia desde el margen anal al borde inferior (cm - opcional):</span>
+                        <input type="text" id="dist-av" style="width: 80px;" oninput="generateReports()">
+                    </div>
+                    <div class="input-text-item">
+                        <span data-i18n="lbl-length">Longitud del tumor (cm):</span>
+                        <input type="text" id="tumour-length" style="width: 80px;" oninput="generateReports()">
+                    </div>
+
+                    <div class="grid-group">
+                        <div class="sub-group-title" data-i18n="sub-peritoneal">Relación con la reflexión peritoneal anterior</div>
+                        <label class="option-item"><input type="radio" name="peritoneal" value="Below"> <span data-i18n="opt-below">Por debajo</span></label>
+                        <label class="option-item"><input type="radio" name="peritoneal" value="Straddles"> <span data-i18n="opt-straddles">La cruza</span></label>
+                        <label class="option-item"><input type="radio" name="peritoneal" value="Above"> <span data-i18n="opt-above">Por encima</span></label>
+                    </div>
+
+                    <div id="peritoneal-details" class="input-text-item indent" style="display:none;">
+                        <span data-i18n="lbl-peritoneal-details">Detalles adicionales (opcional):</span>
+                        <input type="text" id="peritoneal-text" style="width: 250px;" oninput="generateReports()">
+                    </div>
+
+                    <div class="grid-group">
+                        <div class="sub-group-title" data-i18n="sub-sto">Relación del borde inferior con el Take-Off Sigmoideo</div>
+                        <label class="option-item"><input type="radio" name="sto" value="At/below (rectum)"> <span data-i18n="opt-sto-below">En/por debajo (recto)</span></label>
+                        <label class="option-item"><input type="radio" name="sto" value="Above (sigmoid)"> <span data-i18n="opt-sto-above">Por encima (sigma)</span></label>
+
+                        <div class="sub-group-title" data-i18n="sub-ct">Categoría T clínica (cT)</div>
+                        <label class="option-item"><input type="radio" name="ct" value="cT1-2"> <span>cT1-2</span></label>
+                        <label class="option-item"><input type="radio" name="ct" value="cT3ab"> <span>cT3ab (&le;5 mm extramural)</span></label>
+                        <label class="option-item"><input type="radio" name="ct" value="cT3cd"> <span>cT3cd (&gt;5 mm extramural)</span></label>
+                        <label class="option-item"><input type="radio" name="ct" value="cT4a"> <span>cT4a (invade peritoneo)</span></label>
+                        <label class="option-item"><input type="radio" name="ct" value="cT4b"> <span>cT4b (invade estructuras pélvicas)</span></label>
+                    </div>
+
+                    <div id="ct4b-panel" class="indent" style="display:none;">
+                        <div class="grid-group">
+                            <div class="sub-group-title" data-i18n="sub-t4b-structures">Estructuras invadidas (cT4b)</div>
+                            <label class="option-item"><input type="checkbox" name="t4b_struct" value="Pelvic organs"> <span data-i18n="struct-organs">Órganos pélvicos</span></label>
+                            <label class="option-item"><input type="checkbox" name="t4b_struct" value="Pelvic floor/sidewall muscles"> <span data-i18n="struct-muscles">Músculos del suelo/pared pélvica</span></label>
+                            <label class="option-item"><input type="checkbox" name="t4b_struct" value="External anal sphincter"> <span data-i18n="struct-sphincter">Esfínter anal externo</span></label>
+                            <label class="option-item"><input type="checkbox" name="t4b_struct" value="Bone"> <span data-i18n="struct-bone">Hueso</span></label>
+                        </div>
+                        <div class="input-text-item block-layout">
+                            <span data-i18n="lbl-t4b-details">Detalle adicional de estructuras invadidas (texto libre):</span>
+                            <textarea id="ct4b-custom-text" oninput="generateReports()"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="grid-group">
+                        <div class="sub-group-title" data-i18n="sub-emvi">Invasión Vascular Extramural (EMVI)</div>
+                        <label class="option-item"><input type="radio" name="emvi" value="No"> <span data-i18n="opt-no">No</span></label>
+                        <label class="option-item"><input type="radio" name="emvi" value="Yes"> <span data-i18n="opt-yes">Sí (Grado 3-4)</span></label>
+
+                        <div class="sub-group-title" data-i18n="sub-sphincter-inv">Invasión del Esfínter (Tumores Distales)</div>
+                        <label class="option-item"><input type="radio" name="sphincter" value="No"> <span data-i18n="opt-no">No</span></label>
+                        <label class="option-item"><input type="radio" name="sphincter" value="Intersphincteric space"> <span data-i18n="opt-intersphincteric">Espacio interesfinteriano</span></label>
+                        <label class="option-item"><input type="radio" name="sphincter" value="Internal sphincter"> <span data-i18n="opt-internal-sph">Esfínter interno</span></label>
+                        <label class="option-item"><input type="radio" name="sphincter" value="External sphincter (=cT4b)"> <span data-i18n="opt-external-sph">Esfínter externo (=cT4b)</span></label>
+                    </div>
+
+                    <div id="sphincter-details-panel" class="input-text-item block-layout indent" style="display:none;">
+                        <span data-i18n="lbl-sphincter-details">Descripción detallada de la afectación (lado, localización, extensión craneocaudal):</span>
+                        <textarea id="sphincter-custom-text" oninput="generateReports()"></textarea>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 data-i18n="sec-mrf">Afectación de la Fascia Mesorrectal (FMR)</h2>
+                    <div class="grid-group">
+                        <div class="sub-group-title" data-i18n="sub-mrf-status">Afectación (margen &le;1 mm)</div>
+                        <label class="option-item"><input type="radio" name="mrf" value="No"> <span data-i18n="opt-mrf-free">No (Margen >1 mm)</span></label>
+                        <label class="option-item"><input type="radio" name="mrf" value="Yes"> <span data-i18n="opt-mrf-invaded">Sí (&le;1 mm)</span></label>
+                    </div>
+
+                    <div id="mrf-details" class="indent" style="display:none;">
+                        <div class="grid-group">
+                            <div class="sub-group-title" data-i18n="sub-mrf-mechanism">Mecanismo de afectación</div>
+                            <label class="option-item"><input type="checkbox" name="mrf_cause" value="Primary tumour"> <span data-i18n="cause-tumour">Tumor primario</span></label>
+                            <label class="option-item"><input type="checkbox" name="mrf_cause" value="EMVI"> <span>EMVI</span></label>
+                            <label class="option-item"><input type="checkbox" name="mrf_cause" value="Irregular node/tumour deposit"> <span data-i18n="cause-node">Ganglio irregular / Depósito tumoral</span></label>
+                        </div>
+                        <div class="input-text-item">
+                            <span data-i18n="lbl-mrf-clock">Localización (posición horaria):</span>
+                            <input type="text" id="mrf-clock" style="width: 80px;" oninput="generateReports()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 data-i18n="sec-nodes">Ganglios Linfáticos y Depósitos Tumorales</h2>
+                    
+                    <div class="grid-group">
+                        <div class="sub-group-title" data-i18n="sub-meso-nodes">Ganglios Mesorrectales Sospechosos</div>
+                        <label class="option-item"><input type="radio" name="meso_nodes" value="No"> <span data-i18n="opt-no">No</span></label>
+                        <label class="option-item"><input type="radio" name="meso_nodes" value="Yes"> <span data-i18n="opt-yes">Sí</span></label>
+                    </div>
+                    
+                    <div id="meso-nodes-details" class="indent" style="display:none; flex-direction: column; gap: 8px; margin-bottom: 15px;">
+                        <div class="input-text-item" style="margin-bottom:0;">
+                            <span data-i18n="lbl-node-num">Número:</span> <input type="number" id="meso-num" style="width:60px;" oninput="generateReports()">
+                            <span data-i18n="lbl-node-size" style="margin-left: 15px;">Tamaño máx (mm):</span> <input type="number" id="meso-size" style="width:60px;" oninput="generateReports()">
+                        </div>
+                        <div class="input-text-item" style="margin-bottom:0;">
+                            <span data-i18n="lbl-node-details">Detalles adicionales:</span> <input type="text" id="meso-details-txt" style="width:250px;" oninput="generateReports()">
+                        </div>
+                    </div>
+
+                    <div class="grid-group">
+                        <div class="sub-group-title" data-i18n="sub-lat-nodes">Ganglios Laterales Regionales Sospechosos (Obturadores / Ilíacos Internos)</div>
+                        <label class="option-item"><input type="radio" name="lat_nodes" value="No"> <span data-i18n="opt-no">No</span></label>
+                        <label class="option-item"><input type="radio" name="lat_nodes" value="Yes"> <span data-i18n="opt-yes">Sí (&ge;7 mm o 5-7 mm + morfología)</span></label>
+                    </div>
+                    
+                    <div id="lat-nodes-details" class="indent" style="display:none; margin-bottom: 15px;">
+                        <label class="option-item"><input type="checkbox" name="lat_loc" value="Obturator"> <span data-i18n="node-obturator">Obturadores</span></label>
+                        <label class="option-item"><input type="checkbox" name="lat_loc" value="Internal iliac"> <span data-i18n="node-int-iliac">Ilíacos internos</span></label>
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+                            <div class="input-text-item" style="margin-bottom:0;">
+                                <span data-i18n="lbl-node-num">Número:</span> <input type="number" id="lat-num" style="width:60px;" oninput="generateReports()">
+                                <span data-i18n="lbl-node-size" style="margin-left: 15px;">Tamaño máx (mm):</span> <input type="number" id="lat-size" style="width:60px;" oninput="generateReports()">
+                            </div>
+                            <div class="input-text-item" style="margin-bottom:0;">
+                                <span data-i18n="lbl-node-details">Detalles adicionales:</span> <input type="text" id="lat-details-txt" style="width:250px;" oninput="generateReports()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-group">
+                        <div class="sub-group-title" data-i18n="sub-td">Depósitos Tumorales (TDs)</div>
+                        <label class="option-item"><input type="radio" name="td" value="No"> <span data-i18n="opt-no">No</span></label>
+                        <label class="option-item"><input type="radio" name="td" value="Yes"> <span data-i18n="opt-yes">Sí (Contorno irregular, contiguos a venas)</span></label>
+                    </div>
+                    
+                    <div id="td-details" class="indent" style="display:none; flex-direction: column; gap: 8px; margin-bottom: 15px;">
+                        <div class="input-text-item" style="margin-bottom:0;">
+                            <span data-i18n="lbl-node-num">Número:</span> <input type="number" id="td-num" style="width:60px;" oninput="generateReports()">
+                            <span data-i18n="lbl-node-size" style="margin-left: 15px;">Tamaño máx (mm):</span> <input type="number" id="td-size" style="width:60px;" oninput="generateReports()">
+                        </div>
+                        <div class="input-text-item" style="margin-bottom:0;">
+                            <span data-i18n="lbl-node-details">Detalles adicionales:</span> <input type="text" id="td-details-txt" style="width:250px;" oninput="generateReports()">
+                        </div>
+                    </div>
+
+                    <div class="grid-group">
+                        <div class="sub-group-title" data-i18n="sub-cM-nodes">Ganglios No Regionales Sospechosos (cM+)</div>
+                        <label class="option-item"><input type="radio" name="cm_nodes" value="No"> <span data-i18n="opt-no">No</span></label>
+                        <label class="option-item"><input type="radio" name="cm_nodes" value="Yes"> <span data-i18n="opt-yes">Sí</span></label>
+                    </div>
+                    
+                    <div id="cm-nodes-details" class="indent" style="display:none; margin-bottom: 15px;">
+                        <label class="option-item"><input type="checkbox" name="cm_loc" value="External iliac"> <span data-i18n="node-ext-iliac">Ilíacos externos</span></label>
+                        <label class="option-item"><input type="checkbox" name="cm_loc" value="Common iliac"> <span data-i18n="node-com-iliac">Ilíacos comunes</span></label>
+                        <label class="option-item"><input type="checkbox" name="cm_loc" value="Inguinal"> <span data-i18n="node-inguinal">Inguinales</span></label>
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+                            <div class="input-text-item" style="margin-bottom:0;">
+                                <span data-i18n="lbl-node-num">Número:</span> <input type="number" id="cm-num" style="width:60px;" oninput="generateReports()">
+                                <span data-i18n="lbl-node-size" style="margin-left: 15px;">Tamaño máx (mm):</span> <input type="number" id="cm-size" style="width:60px;" oninput="generateReports()">
+                            </div>
+                            <div class="input-text-item" style="margin-bottom:0;">
+                                <span data-i18n="lbl-node-details">Detalles adicionales:</span> <input type="text" id="cm-details-txt" style="width:250px;" oninput="generateReports()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-group">
+                        <div class="sub-group-title" data-i18n="sub-cn-category">Categoría cN Estimada (Enfoque a nivel de paciente)</div>
+                        <label class="option-item"><input type="radio" name="cn_est" value="Definitely cN0"> <span style="color:#28a745; font-weight:bold;">Definitely cN0</span></label>
+                        <label class="option-item"><input type="radio" name="cn_est" value="Possibly cN+"> <span style="color:#ffc107; font-weight:bold;">Possibly cN+</span></label>
+                        <label class="option-item"><input type="radio" name="cn_est" value="Definitely cN+"> <span style="color:#dc3545; font-weight:bold;">Definitely cN+</span></label>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 data-i18n="sec-other-findings">Otros Hallazgos</h2>
+                    <div class="input-text-item block-layout">
+                        <textarea id="custom-other-findings" placeholder="..." style="height:100px;" oninput="generateReports()"></textarea>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 data-i18n="sec-conclusion">Conclusión</h2>
+                    <div class="input-text-item block-layout">
+                        <textarea id="custom-conclusion" placeholder="..." style="height:100px;" oninput="generateReports()"></textarea>
+                    </div>
+                </div>
+            </form>
+
+            <div class="output-area">
+                <div class="report-box">
+                    <label id="title-narrative" data-i18n="title-narrative-lbl">1. Informe Clínico Narrativo</label>
+                    <textarea id="report-narrative" readonly></textarea>
+                    <div class="actions-row">
+                        <button class="btn-primary" onclick="copyToClipboard('report-narrative')" data-i18n="btn-copy">Copiar al Portapapeles</button>
+                        <button class="btn-danger" onclick="resetForm()" data-i18n="btn-reset">Reiniciar Módulo</button>
+                    </div>
+                </div>
+
+                <div class="report-box">
+                    <label id="title-schematic" data-i18n="title-schematic-lbl">2. Informe Estructurado Esquemático</label>
+                    <textarea id="report-schematic" readonly></textarea>
+                    <div class="actions-row">
+                        <button class="btn-primary" onclick="copyToClipboard('report-schematic')" data-i18n="btn-copy">Copiar al Portapapeles</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-column">
+            <h2 data-i18n="sec-help-title">Soporte Departamental y Guías</h2>
+            <div class="help-image-container">
+                <h3 data-i18n="fig4-title">Localización y Take-Off Sigmoideo (Fig. 4)</h3>
+                <img class="help-img" src="https://media.springernature.com/full/springer-static/image/art%3A10.1007%2Fs00330-025-12274-w/MediaObjects/330_2025_12274_Fig4_HTML.png?as=webp" alt="ESGAR Fig 4">
+            </div>
+            <div class="help-image-container">
+                <h3 data-i18n="fig3-title">Algoritmo de Riesgo Nodal Paso a Paso (Fig. 3)</h3>
+                <img class="help-img" src="https://media.springernature.com/full/springer-static/image/art%3A10.1007%2Fs00330-025-12274-w/MediaObjects/330_2025_12274_Fig3_HTML.png?as=webp" alt="ESGAR Fig 3">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            es: {
+                "sec-tumour-status": "Estado Local del Tumor",
+                "sub-morphology-comp": "Composición",
+                "opt-solid": "Sólido", "opt-mucinous": "Mucinoso", "opt-mixed": "Mixto",
+                "sub-morphology-shape": "Morfología",
+                "opt-polyp": "Pólipo", "opt-annular": "Completamente anular", "opt-part-annular": "Parcialmente anular",
+                "warn-polyp": "⚠️ <strong>Aviso:</strong> La medida de la distancia del tumor a la unión anorrectal debería hacerse desde la raíz del pólipo.",
+                "lbl-hours": "Extensión (en agujas del reloj):", "lbl-to": "a",
+                "sub-location": "Localización y Medidas",
+                "lbl-dist-arj": "Distancia desde la unión anorrectal al borde inferior (cm):",
+                "lbl-dist-av": "Distancia desde el margen anal al borde inferior (cm - opcional):",
+                "lbl-length": "Longitud del tumor (cm):",
+                "sub-peritoneal": "Relación con la reflexión peritoneal anterior",
+                "opt-below": "Por debajo", "opt-straddles": "La cruza", "opt-above": "Por encima",
+                "lbl-peritoneal-details": "Detalles adicionales (opcional):",
+                "sub-sto": "Relación del borde inferior con el Take-Off Sigmoideo",
+                "opt-sto-below": "En/por debajo (recto)", "opt-sto-above": "Por encima (sigma)",
+                "sub-ct": "Categoría T clínica (cT)",
+                "sub-t4b-structures": "Estructuras invadidas (cT4b)",
+                "struct-organs": "Órganos pélvicos", "struct-muscles": "Músculos del suelo/pared pélvica", "struct-sphincter": "Esfínter anal externo", "struct-bone": "Hueso",
+                "lbl-t4b-details": "Detalle adicional de estructuras invadidas (texto libre):",
+                "sub-emvi": "Invasión Vascular Extramural (EMVI)",
+                "opt-no": "No", "opt-yes": "Sí (Grado 3-4)",
+                "sub-sphincter-inv": "Invasión del Esfínter (Tumores Distales)",
+                "opt-intersphincteric": "Espacio interesfinteriano", "opt-internal-sph": "Esfínter interno", "opt-external-sph": "Esfínter externo (=cT4b)",
+                "lbl-sphincter-details": "Descripción detallada de la afectación (lado, localización, extensión craneocaudal):",
+                "sec-mrf": "Afectación de la Fascia Mesorrectal (FMR)",
+                "sub-mrf-status": "Afectación (margen <= 1 mm)",
+                "opt-mrf-free": "No (Margen > 1 mm)", "opt-mrf-invaded": "Sí (<= 1 mm)",
+                "sub-mrf-mechanism": "Mecanismo de afectación",
+                "cause-tumour": "Tumor primario", "cause-node": "Ganglio irregular / Depósito tumoral",
+                "lbl-mrf-clock": "Localización (posición horaria):",
+                "sec-nodes": "Ganglios Linfáticos y Depósitos Tumorales",
+                "sub-meso-nodes": "Ganglios Mesorrectales Sospechosos",
+                "lbl-node-num": "Número:",
+                "lbl-node-size": "Tamaño máx (mm):",
+                "lbl-node-details": "Detalles adicionales:",
+                "sub-lat-nodes": "Ganglios Laterales Regionales Sospechosos (Obturadores / Ilíacos Internos)",
+                "node-obturator": "Obturadores", "node-int-iliac": "Ilíacos internos",
+                "sub-td": "Depósitos Tumorales (TDs)",
+                "sub-cM-nodes": "Ganglios No Regionales Sospechosos (cM+)",
+                "node-ext-iliac": "Ilíacos externos", "node-com-iliac": "Ilíacos comunes", "node-inguinal": "Inguinales",
+                "sub-cn-category": "Categoría cN Estimada (Enfoque a nivel de paciente)",
+                "sec-other-findings": "Otros Hallazgos",
+                "sec-conclusion": "Conclusión",
+                "title-narrative-lbl": "1. Informe Clínico Narrativo",
+                "title-schematic-lbl": "2. Informe Estructurado Esquemático",
+                "btn-copy": "Copiar al Portapapeles", "btn-reset": "Reiniciar Módulo",
+                "sec-help-title": "Soporte Departamental y Guías",
+                "fig4-title": "Localización y Take-Off Sigmoideo (Fig. 4)",
+                "fig3-title": "Algoritmo de Riesgo Nodal Paso a Paso (Fig. 3)",
+                
+                "rep-title": "INFORME DE RM DE RECTO (ESTADIAJE PRIMARIO - ESGAR 2026)",
+                "rep-section-morph": "MORFOLOGÍA",
+                "rep-section-loc": "LOCALIZACIÓN Y MEDIDAS",
+                "rep-section-t": "ESTADIAJE T CLÍNIC (cT) Y FACTORS DE RIESGO",
+                "rep-section-mrf": "FASCIA MESORRECTAL (FMR)",
+                "rep-section-n": "ESTADIAJE GANGLIONAR (cN) Y DEPÓSITOS",
+                "rep-section-other": "OTROS HALLAZGOS",
+                "rep-section-conclusion": "CONCLUSIÓN",
+                "rep-not-eval": "No evaluado", "rep-none": "Ninguno", "rep-no": "No", "rep-yes": "Sí",
+                "rep-solid": "Sólido", "rep-mucinous": "Mucinoso", "rep-mixed": "Mixto",
+                "rep-polyp": "Pólipo", "rep-fully-annular": "Completamente anular", "rep-partly-annular": "Parcialmente anular",
+                "rep-below": "Por debajo", "rep-straddles": "La cruza", "rep-above": "Por encima",
+                "rep-sto-below": "En/por debajo (recto)", "rep-sto-above": "Por encima (sigma)"
+            },
+            ca: {
+                "sec-tumour-status": "Estat Local del Tumor",
+                "sub-morphology-comp": "Composició",
+                "opt-solid": "Sòlid", "opt-mucinous": "Mucinós", "opt-mixed": "Mixte",
+                "sub-morphology-shape": "Morfologia",
+                "opt-polyp": "Pòlip", "opt-annular": "Completament anular", "opt-part-annular": "Parcialment anular",
+                "warn-polyp": "⚠️ <strong>Avís:</strong> La mesura de la distància del tumor a la unió anorrectal s'hauria de fer des de l'arrel del pòlip.",
+                "lbl-hours": "Extensió (en agulles del rellotge):", "lbl-to": "a",
+                "sub-location": "Localització i Mesures",
+                "lbl-dist-arj": "Distància des de la unió anorrectal al marge inferior (cm):",
+                "lbl-dist-av": "Distància des del marge anal al marge inferior (cm - opcional):",
+                "lbl-length": "Longitud del tumor (cm):",
+                "sub-peritoneal": "Relació amb la reflexió peritoneal anterior",
+                "opt-below": "Per sota", "opt-straddles": "La creua", "opt-above": "Per sobre",
+                "lbl-peritoneal-details": "Detalls addicionals (opcional):",
+                "sub-sto": "Relació del marge inferior amb el Take-Off Sigmoïdal",
+                "opt-sto-below": "A/per sota (recte)", "opt-sto-above": "Per sobre (sigma)",
+                "sub-ct": "Categoria T clínica (cT)",
+                "sub-t4b-structures": "Estructures invadides (cT4b)",
+                "struct-organs": "Òrgans pèlvics", "struct-muscles": "Músculs del sòl/paret pèlvica", "struct-sphincter": "Esfínter anal extern", "struct-bone": "Os",
+                "lbl-t4b-details": "Detall addicional d'estructures invadides (text lliure):",
+                "sub-emvi": "Invasió Vascular Extramural (EMVI)",
+                "opt-no": "No", "opt-yes": "Sí (Grau 3-4)",
+                "sub-sphincter-inv": "Invasió de l'Esfínter (Tumors Distals)",
+                "opt-intersphincteric": "Espai interesfinterià", "opt-internal-sph": "Esfínter intern", "opt-external-sph": "Esfínter extern (=cT4b)",
+                "lbl-sphincter-details": "Descripció detallada de l'afectació (costat, localització, extensió craniocaudal):",
+                "sec-mrf": "Afectació de la Fàscia Mesorrectal (FMR)",
+                "sub-mrf-status": "Afectació (marge <= 1 mm)",
+                "opt-mrf-free": "No (Marge > 1 mm)", "opt-mrf-invaded": "Sí (<= 1 mm)",
+                "sub-mrf-mechanism": "Mecanisme d'afectació",
+                "cause-tumour": "Tumor primari", "cause-node": "Gangli irregular / Dipòsit tumoral",
+                "lbl-mrf-clock": "Localització (posició horària):",
+                "sec-nodes": "Ganglis Limfàtics i Dipòsits Tumorals",
+                "sub-meso-nodes": "Ganglis Mesorrectals Sospitosos",
+                "lbl-node-num": "Nombre:",
+                "lbl-node-size": "Mida màx (mm):",
+                "lbl-node-details": "Detalls addicionals:",
+                "sub-lat-nodes": "Ganglis Regionals Sospitosos (Obturadors / Ilíacs Interns)",
+                "node-obturator": "Obturadors", "node-int-iliac": "Ilíacs interns",
+                "sub-td": "Dipòsits Tumorals (TDs)",
+                "sub-cM-nodes": "Ganglis No Regionals Sospitosos (cM+)",
+                "node-ext-iliac": "Ilíacs externs", "node-com-iliac": "Ilíacs comuns", "node-inguinal": "Inguinals",
+                "sub-cn-category": "Categoria cN Estimada (Enfocament a nivell de pacient)",
+                "sec-other-findings": "Altres Troballes",
+                "sec-conclusion": "Conclusió",
+                "title-narrative-lbl": "1. Informe Clínic Narratiu",
+                "title-schematic-lbl": "2. Informe Estructurat Esquemàtic",
+                "btn-copy": "Copiar al Portapapeles", "btn-reset": "Reiniciar Mòdul",
+                "sec-help-title": "Suport Departamental i Guies",
+                "fig4-title": "Localització i Take-Off Sigmoïdal (Fig. 4)",
+                "fig3-title": "Algorisme de Risc Nodal Pas a Pas (Fig. 3)",
+                
+                "rep-title": "INFORME DE RM DE RECTE (ESTADIATGE PRIMARI - ESGAR 2026)",
+                "rep-section-morph": "MORFOLOGIA",
+                "rep-section-loc": "LOCALITZACIÓ I MESURES",
+                "rep-section-t": "ESTADIATGE T CLÍNIC (cT) I FACTORS DE RISC",
+                "rep-section-mrf": "FÀSCIA MESORRECTAL (FMR)",
+                "rep-section-n": "ESTADIATGE GANGLIONAR (cN) I DIPÒSITS",
+                "rep-section-other": "ALTRES TROBALLES",
+                "rep-section-conclusion": "CONCLUSIÓ",
+                "rep-not-eval": "No avaluat", "rep-none": "Cap", "rep-no": "No", "rep-yes": "Sí",
+                "rep-solid": "Sòlid", "rep-mucinous": "Mucinós", "rep-mixed": "Mixte",
+                "rep-polyp": "Pòlip", "rep-fully-annular": "Completament anular", "rep-partly-annular": "Parcialment anular",
+                "rep-below": "Per sota", "rep-straddles": "La creua", "rep-above": "Per sobre",
+                "rep-sto-below": "A/per sota (recte)", "rep-sto-above": "Per sobre (sigma)"
+            },
+            en: {
+                "sec-tumour-status": "Local Tumour Status",
+                "sub-morphology-comp": "Composition",
+                "opt-solid": "Solid", "opt-mucinous": "Mucinous", "opt-mixed": "Mixed",
+                "sub-morphology-shape": "Shape",
+                "opt-polyp": "Polyp", "opt-annular": "Fully annular", "opt-part-annular": "Partly annular",
+                "warn-polyp": "⚠️ <strong>Notice:</strong> The distance measurement from the anorectal junction to the tumour should be taken from the stalk/base of the polyp.",
+                "lbl-hours": "Extent (o'clock):", "lbl-to": "to",
+                "sub-location": "Location & Measurements",
+                "lbl-dist-arj": "Distance from anorectal junction to lower border (cm):",
+                "lbl-dist-av": "Distance from anal verge to lower border (cm - optional):",
+                "lbl-length": "Tumour length (cm):",
+                "sub-peritoneal": "Relation to anterior peritoneal reflection",
+                "opt-below": "Below", "opt-straddles": "Straddles", "opt-above": "Above",
+                "lbl-peritoneal-details": "Additional details (optional):",
+                "sub-sto": "Relation of lower border to Sigmoid Take-Off (STO)",
+                "opt-sto-below": "At/below (rectum)", "opt-sto-above": "Above (sigmoid)",
+                "sub-ct": "Clinical T-category (cT)",
+                "sub-t4b-structures": "Structures invaded (cT4b)",
+                "struct-organs": "Pelvic organs", "struct-muscles": "Pelvic floor/sidewall muscles", "struct-sphincter": "External anal sphincter", "struct-bone": "Bone",
+                "lbl-t4b-details": "Additional detail of structures invaded (free text):",
+                "sub-emvi": "Extramural Vascular Invasion (EMVI)",
+                "opt-no": "No", "opt-yes": "Yes (Grade 3-4)",
+                "sub-sphincter-inv": "Sphincter Invasion (Distal Tumours)",
+                "opt-intersphincteric": "Intersphincteric space", "opt-internal-sph": "Internal sphincter", "opt-external-sph": "External sphincter (=cT4b)",
+                "lbl-sphincter-details": "Detailed description of involvement (side, location, craniocaudal extension):",
+                "sec-mrf": "Mesorectal Fascia (MRF) Involvement",
+                "sub-mrf-status": "Involvement (margin <= 1 mm)",
+                "opt-mrf-free": "No (Margin > 1 mm)", "opt-mrf-invaded": "Yes (<= 1 mm)",
+                "sub-mrf-mechanism": "Mechanism of involvement",
+                "cause-tumour": "Primary tumour", "cause-node": "Irregular lymph node / Tumour deposit",
+                "lbl-mrf-clock": "Location (o'clock):",
+                "sec-nodes": "Lymph Nodes & Tumour Deposits",
+                "sub-meso-nodes": "Suspicious Mesorectal Lymph Nodes",
+                "lbl-node-num": "Number:",
+                "lbl-node-size": "Max size (mm):",
+                "lbl-node-details": "Additional details:",
+                "sub-lat-nodes": "Suspicious Regional Lateral Lymph Nodes (Obturator / Internal Iliac)",
+                "node-obturator": "Obturator", "node-int-iliac": "Internal iliac",
+                "sub-td": "Tumour Deposits (TDs)",
+                "sub-cM-nodes": "Suspicious Non-Regional Lymph Nodes (cM+)",
+                "node-ext-iliac": "External iliac", "node-com-iliac": "Common iliac", "node-inguinal": "Inguinal",
+                "sub-cn-category": "Estimated cN-category (Patient-level approach)",
+                "sec-other-findings": "Other Findings",
+                "sec-conclusion": "Conclusion",
+                "title-narrative-lbl": "1. Narrative Clinical Report",
+                "title-schematic-lbl": "2. Structured Schematic Report",
+                "btn-copy": "Copy to Clipboard", "btn-reset": "Reset Module",
+                "sec-help-title": "Department Support & Guidelines",
+                "fig4-title": "Anatomy Localisation & Sigmoid Take-Off (Fig. 4)",
+                "fig3-title": "Stepwise Risk-Adaptive Nodal Flowchart (Fig. 3)",
+                
+                "rep-title": "RECTAL MRI REPORT (PRIMARY STAGING - ESGAR 2026)",
+                "rep-section-morph": "MORPHOLOGY",
+                "rep-section-loc": "LOCATION & MEASUREMENTS",
+                "rep-section-t": "CLINICAL T STAGING (cT) & RISK FACTORS",
+                "rep-section-mrf": "MESORECTAL FASCIA (MRF)",
+                "rep-section-n": "NODAL STAGING (cN) & DEPOSITS",
+                "rep-section-other": "OTHER FINDINGS",
+                "rep-section-conclusion": "CONCLUSION",
+                "rep-not-eval": "Not evaluated", "rep-none": "None", "rep-no": "No", "rep-yes": "Yes",
+                "rep-solid": "Solid", "rep-mucinous": "Mucinous", "rep-mixed": "Mixed",
+                "rep-polyp": "Polyp", "rep-fully-annular": "Fully annular", "rep-partly-annular": "Partly annular",
+                "rep-below": "Below", "rep-straddles": "Straddles", "rep-above": "Above",
+                "rep-sto-below": "At/below (rectum)", "rep-sto-above": "Above (sigmoid)"
+            }
+        };
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const targetTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', targetTheme);
+        }
+
+        function changeLanguage() {
+            const lang = document.getElementById('lang-select').value;
+            document.querySelectorAll('[data-i18n]').forEach(elem => {
+                const key = elem.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    elem.innerHTML = translations[lang][key];
+                }
+            });
+            generateReports();
+        }
+
+        function resetForm() {
+            document.getElementById('staging-form').reset();
+            document.getElementById('shape-hours-from').value = '';
+            document.getElementById('shape-hours-to').value = '';
+            document.getElementById('dist-arj').value = '';
+            document.getElementById('dist-av').value = '';
+            document.getElementById('tumour-length').value = '';
+            document.getElementById('peritoneal-text').value = '';
+            document.getElementById('ct4b-custom-text').value = '';
+            document.getElementById('sphincter-custom-text').value = '';
+            document.getElementById('mrf-clock').value = '';
+            
+            // Reset ganglion details
+            document.getElementById('meso-num').value = '';
+            document.getElementById('meso-size').value = '';
+            document.getElementById('meso-details-txt').value = '';
+            document.getElementById('lat-num').value = '';
+            document.getElementById('lat-size').value = '';
+            document.getElementById('lat-details-txt').value = '';
+            document.getElementById('td-num').value = '';
+            document.getElementById('td-size').value = '';
+            document.getElementById('td-details-txt').value = '';
+            document.getElementById('cm-num').value = '';
+            document.getElementById('cm-size').value = '';
+            document.getElementById('cm-details-txt').value = '';
+
+            document.getElementById('custom-other-findings').value = '';
+            document.getElementById('custom-conclusion').value = '';
+            generateReports();
+        }
+
+        function copyToClipboard(id) {
+            const textarea = document.getElementById(id);
+            textarea.select();
+            document.execCommand('copy');
+            const lang = document.getElementById('lang-select').value;
+            alert(lang === 'en' ? 'Copied to clipboard!' : (lang === 'ca' ? 'Copiat al portapapers!' : '¡Copiado al portapapeles!'));
+        }
+
+        function formatNodeDetails(num, size, details) {
+            let parts = [];
+            if (num) parts.push(`Nº: ${num}`);
+            if (size) parts.push(`Tamaño máx: ${size} mm`);
+            if (details) parts.push(`${details}`);
+            return parts.length > 0 ? parts.join(', ') : 'verificado';
+        }
+
+        function generateReports() {
+            const lang = document.getElementById('lang-select').value;
+            const t = translations[lang];
+            const form = document.getElementById('staging-form');
+            const formData = new FormData(form);
+
+            const rawComp = formData.get('composition');
+            const comp = rawComp ? t['rep-' + rawComp.toLowerCase()] : t['rep-not-eval'];
+            
+            const rawShape = formData.get('shape');
+            let keyShape = 'not-eval';
+            if (rawShape === 'Polyp') keyShape = 'polyp';
+            if (rawShape === 'Fully annular') keyShape = 'fully-annular';
+            if (rawShape === 'Partly annular') keyShape = 'partly-annular';
+            const shape = t['rep-' + keyShape];
+
+            const distArj = document.getElementById('dist-arj').value;
+            const distAv = document.getElementById('dist-av').value;
+            const length = document.getElementById('tumour-length').value;
+            
+            const rawPeritoneal = formData.get('peritoneal');
+            const peritoneal = rawPeritoneal ? t['rep-' + rawPeritoneal.toLowerCase()] : t['rep-not-eval'];
+            
+            const rawSto = formData.get('sto');
+            const sto = rawSto ? (rawSto.includes('At/below') ? t['rep-sto-below'] : t['rep-sto-above']) : t['rep-not-eval'];
+            
+            const ct = formData.get('ct') || t['rep-not-eval'];
+            const emvi = formData.get('emvi') === 'Yes' ? t['rep-yes'] : (formData.get('emvi') === 'No' ? t['rep-no'] : t['rep-not-eval']);
+            const sphincter = formData.get('sphincter') || t['rep-not-eval'];
+            const mrf = formData.get('mrf') === 'Yes' ? t['rep-yes'] : (formData.get('mrf') === 'No' ? t['rep-no'] : t['rep-not-eval']);
+            
+            const mesoNodes = formData.get('meso_nodes');
+            const latNodes = formData.get('lat_nodes');
+            const td = formData.get('td');
+            const cmNodes = formData.get('cm_nodes');
+            const cnEst = formData.get('cn_est') || t['rep-not-eval'];
+            
+            const otherFindingsText = document.getElementById('custom-other-findings').value;
+            const conclusionText = document.getElementById('custom-conclusion').value;
+
+            // Paneles reactivos
+            document.getElementById('polyp-warning').style.display = (rawShape === 'Polyp') ? 'block' : 'none';
+            document.getElementById('partly-annular-hours').style.display = (rawShape === 'Partly annular') ? 'flex' : 'none';
+            document.getElementById('peritoneal-details').style.display = (rawPeritoneal === 'Straddles') ? 'block' : 'none';
+            document.getElementById('ct4b-panel').style.display = (ct === 'cT4b') ? 'block' : 'none';
+            document.getElementById('sphincter-details-panel').style.display = (sphincter !== 'No' && sphincter !== t['rep-not-eval']) ? 'block' : 'none';
+            document.getElementById('mrf-details').style.display = (formData.get('mrf') === 'Yes') ? 'block' : 'none';
+            document.getElementById('meso-nodes-details').style.display = (mesoNodes === 'Yes') ? 'flex' : 'none';
+            document.getElementById('lat-nodes-details').style.display = (latNodes === 'Yes') ? 'block' : 'none';
+            document.getElementById('td-details').style.display = (td === 'Yes') ? 'flex' : 'none';
+            document.getElementById('cm-nodes-details').style.display = (cmNodes === 'Yes') ? 'block' : 'none';
+
+            // Compilar textos de ganglios
+            const mesoText = formatNodeDetails(document.getElementById('meso-num').value, document.getElementById('meso-size').value, document.getElementById('meso-details-txt').value);
+            const latText = formatNodeDetails(document.getElementById('lat-num').value, document.getElementById('lat-size').value, document.getElementById('lat-details-txt').value);
+            const tdText = formatNodeDetails(document.getElementById('td-num').value, document.getElementById('td-size').value, document.getElementById('td-details-txt').value);
+            const cmText = formatNodeDetails(document.getElementById('cm-num').value, document.getElementById('cm-size').value, document.getElementById('cm-details-txt').value);
+
+            // --- 1. GENERACIÓN DE INFORME ESQUEMÁTICO ---
+            let schematic = `*** ${t['rep-title']} ***\n\n`;
+            
+            schematic += `[${t['rep-section-morph']}]\n`;
+            schematic += `  - Composición: ${comp}\n`;
+            let shapeStr = shape;
+            if (rawShape === 'Partly annular' && document.getElementById('shape-hours-from').value) {
+                const hoursLabel = lang === 'en' ? 'o\'clock' : (lang === 'ca' ? 'en agulles del rellotge' : 'en agujas del reloj');
+                shapeStr += ` (${document.getElementById('shape-hours-from').value} ${t['lbl-to']} ${document.getElementById('shape-hours-to').value} ${hoursLabel})`;
+            }
+            schematic += `  - Morfología: ${shapeStr}\n\n`;
+
+            schematic += `[${t['rep-section-loc']}]\n`;
+            schematic += `  - Distancia a Unión Anorrectal: ${distArj ? distArj + ' cm' : t['rep-not-eval']}\n`;
+            schematic += `  - Distancia a Margen Anal: ${distAv ? distAv + ' cm' : t['rep-none']}\n`;
+            schematic += `  - Longitud Craneocaudal: ${length ? length + ' cm' : t['rep-not-eval']}\n`;
+            
+            let peritonealStr = peritoneal;
+            if (rawPeritoneal === 'Straddles' && document.getElementById('peritoneal-text').value) {
+                peritonealStr += ` (${document.getElementById('peritoneal-text').value})`;
+            }
+            schematic += `  - Relación con Reflexión Peritoneal Anterior: ${peritonealStr}\n`;
+            
+            const labelStoTitle = lang === 'en' ? 'Sigmoid Take-Off (STO)' : (lang === 'ca' ? 'Take-Off Sigmoïdal' : 'Take-Off Sigmoideo');
+            schematic += `  - Relación con ${labelStoTitle}: ${sto}\n\n`;
+
+            schematic += `[${t['rep-section-t']}]\n`;
+            schematic += `  - Categoría cT: ${ct}\n`;
+            if (ct === 'cT4b') {
+                const checkedStructs = Array.from(document.querySelectorAll('input[name="t4b_struct"]:checked')).map(el => {
+                    if(lang === 'en') return el.value;
+                    if(lang === 'ca') return el.value === 'Pelvic organs' ? 'Òrgans pèlvics' : el.value === 'Pelvic floor/sidewall muscles' ? 'Músculs del sòl/paret pèlvica' : el.value === 'External anal sphincter' ? 'Esfínter anal extern' : 'Os';
+                    return el.value === 'Pelvic organs' ? 'Órganos pélculvicos' : el.value === 'Pelvic floor/sidewall muscles' ? 'Músculos del suelo/pared pélvica' : el.value === 'External anal sphincter' ? 'Esfínter anal externo' : 'Hueso';
+                });
+                schematic += `    * Estructuras afectadas: ${checkedStructs.length > 0 ? checkedStructs.join(', ') : t['rep-none']}\n`;
+                if(document.getElementById('ct4b-custom-text').value) {
+                    schematic += `    * Detalles cT4b: ${document.getElementById('ct4b-custom-text').value}\n`;
+                }
+            }
+            schematic += `  - EMVI (Grado 3-4): ${emvi}\n`;
+            
+            let sphincterOut = sphincter;
+            if (sphincter !== 'No' && sphincter !== t['rep-not-eval']) {
+                if(lang === 'es') sphincterOut = sphincter === 'Intersphincteric space' ? 'Espacio interesfinteriano' : sphincter === 'Internal sphincter' ? 'Esfínter interno' : 'Esfínter externo (=cT4b)';
+                if(lang === 'ca') sphincterOut = sphincter === 'Intersphincteric space' ? 'Espai interesfinterià' : sphincter === 'Internal sphincter' ? 'Esfínter intern' : 'Esfínter extern (=cT4b)';
+            }
+            schematic += `  - Invasión del Esfínter: ${sphincterOut}\n`;
+            if (sphincter !== 'No' && sphincter !== t['rep-not-eval'] && document.getElementById('sphincter-custom-text').value) {
+                schematic += `    * Detalles Esfínter: ${document.getElementById('sphincter-custom-text').value}\n`;
+            }
+            schematic += `\n`;
+
+            schematic += `[${t['rep-section-mrf']}]\n`;
+            schematic += `  - Afectada (<= 1 mm): ${mrf}\n`;
+            if (formData.get('mrf') === 'Yes') {
+                const mrfCauses = Array.from(document.querySelectorAll('input[name="mrf_cause"]:checked')).map(el => {
+                    if(lang === 'en') return el.value;
+                    if(lang === 'ca') return el.value === 'Primary tumour' ? 'Tumor primari' : el.value === 'EMVI' ? 'EMVI' : 'Gangli irregular / Dipòsit tumoral';
+                    return el.value === 'Primary tumour' ? 'Tumor primario' : el.value === 'EMVI' ? 'EMVI' : 'Ganglio irregular / Depósito tumoral';
+                });
+                schematic += `    * Mecanismo: ${mrfCauses.length > 0 ? mrfCauses.join(', ') : t['rep-not-eval']}\n`;
+                schematic += `    * Localización horaria: ${document.getElementById('mrf-clock').value || t['rep-not-eval']}\n`;
+            }
+            schematic += `\n`;
+
+            schematic += `[${t['rep-section-n']}]\n`;
+            schematic += `  - Nódulos Mesorrectales Sospechosos: ${mesoNodes === 'Yes' ? t['rep-yes'] + ' (' + mesoText + ')' : t['rep-no']}\n`;
+            
+            if (latNodes === 'Yes') {
+                const latLocs = Array.from(document.querySelectorAll('input[name="lat_loc"]:checked')).map(el => {
+                    if (lang === 'en') return el.value;
+                    return el.value === 'Obturator' ? t['node-obturator'] : t['node-int-iliac'];
+                });
+                schematic += `  - Nódulos Laterales Regionales: ${t['rep-yes']} [${latLocs.join('/')}] (${latText})\n`;
+            } else {
+                schematic += `  - Nódulos Laterales Regionales: ${t['rep-no']}\n`;
+            }
+
+            schematic += `  - Depósitos Tumorales (TDs): ${td === 'Yes' ? t['rep-yes'] + ' (' + tdText + ')' : t['rep-no']}\n`;
+            
+            if (cmNodes === 'Yes') {
+                const cmLocs = Array.from(document.querySelectorAll('input[name="cm_loc"]:checked')).map(el => {
+                    if (lang === 'en') return el.value;
+                    return el.value === 'External iliac' ? t['node-ext-iliac'] : el.value === 'Common iliac' ? t['node-com-iliac'] : t['node-inguinal'];
+                });
+                schematic += `  - Nódulos No Regionales (cM+): ${t['rep-yes']} [${cmLocs.join('/')}] (${cmText})\n`;
+            } else {
+                schematic += `  - Nódulos No Regionales (cM+): ${t['rep-no']}\n`;
+            }
+            schematic += `  - Categoría cN Estimada global: ${cnEst}\n\n`;
+
+            schematic += `[${t['rep-section-other']}]\n`;
+            schematic += `  ${otherFindingsText || t['rep-none']}\n\n`;
+
+            schematic += `[${t['rep-section-conclusion']}]\n`;
+            schematic += `  ${conclusionText || t['rep-none']}`;
+
+            document.getElementById('report-schematic').value = schematic;
+
+
+            // --- 2. GENERACIÓN DE INFORME NARRATIVO ---
+            let narrative = "";
+            if (lang === 'es') {
+                narrative = `ESTUDIO DE RESONANCIA MAGNÉTICA DE RECTO (ESTADIAJE PRIMARIO - ESGAR 2026)\n\n`;
+                narrative += `Hallazgos locales de la lesión:\n`;
+                narrative += `Se identifica una masa rectal de composición estructural principalmente ${comp.toLowerCase()} y morfología de tipo ${shape.toLowerCase()}`;
+                if (rawShape === 'Partly annular' && document.getElementById('shape-hours-from').value) {
+                    narrative += ` que se extiende desde las ${document.getElementById('shape-hours-from').value} hasta las ${document.getElementById('shape-hours-to').value} en las agujas del reloj`;
+                }
+                narrative += `. El tumor presenta una longitud máxima de ${length || '___'} cm. Su borde inferior se localiza a una distancia de ${distArj || '___'} cm de la unión anorrectal`;
+                if (distAv) narrative += ` y a ${distAv} cm del margen anal`;
+                
+                let textSto = (rawSto === 'At/below (rectum)') ? "en o por debajo del nivel del Take-Off Sigmoideo" : "por encima del Take-Off Sigmoideo, orientando a una neoplasia de sigma";
+                narrative += `. La lesión se sitúa ${textSto}. `;
+                
+                if (rawPeritoneal === 'Straddles') {
+                    narrative += `En el sentido craneocaudal, la lesión cruza la reflexión peritoneal anterior`;
+                    if (document.getElementById('peritoneal-text').value) {
+                        narrative += ` (${document.getElementById('peritoneal-text').value})`;
+                    }
+                    narrative += `.\n\n`;
+                } else {
+                    narrative += `En sentido craneocaudal, su relación con la reflexión peritoneal anterior es: ${peritoneal.toLowerCase()}.\n\n`;
+                }
+                
+                narrative += `Extensión extramural y categoría T:\n`;
+                narrative += `El comportamiento y la invasión de las capas parietales definen una categoría clínica ${ct}. `;
+                if (ct === 'cT4b') {
+                    const checkedStructs = Array.from(document.querySelectorAll('input[name="t4b_struct"]:checked')).map(el => {
+                        return el.value === 'Pelvic organs' ? 'órganos pélvicos' : el.value === 'Pelvic floor/sidewall muscles' ? 'músculos del suelo/pared pélvica' : el.value === 'External anal sphincter' ? 'esfínter anal externo' : 'hueso';
+                    });
+                    narrative += `Se constata afectación macroscópica directa de: ${checkedStructs.length > 0 ? checkedStructs.join(', ') : 'estructuras no especificadas'}. `;
+                    if(document.getElementById('ct4b-custom-text').value) narrative += `Detalles de la invasión pélvica: ${document.getElementById('ct4b-custom-text').value}. `;
+                }
+                if (sphincter !== 'No' && sphincter !== t['rep-not-eval']) {
+                    narrative += `En el segmento distal se identifica invasión del ${sphincterOut.toLowerCase()}`;
+                    if(document.getElementById('sphincter-custom-text').value) narrative += ` (${document.getElementById('sphincter-custom-text').value})`;
+                    narrative += `. `;
+                } else {
+                    narrative += `No se observa infiltración del aparato esfinteriano. `;
+                }
+                narrative += `El estudio de la invasión vascular extramural (EMVI) se considera ${formData.get('emvi') === 'Yes' ? 'POSITIVO (Grado 3-4)' : 'NEGATIVO'}.\n\n`;
+
+                narrative += `Fascia Mesorrectal (FMR):\n`;
+                if (formData.get('mrf') === 'Yes') {
+                    const mrfCauses = Array.from(document.querySelectorAll('input[name="mrf_cause"]:checked')).map(el => el.value === 'Primary tumour' ? 'tumor primario' : el.value === 'EMVI' ? 'EMVI' : 'ganglios/depósitos irregulares');
+                    narrative += `La fascia mesorrectal se encuentra comprometida (margen libre de tumor directo o estructuras de riesgo <= 1 mm) a las ${document.getElementById('mrf-clock').value || '___'} en sentido horario, secundario a: ${mrfCauses.join(', ')}.\n\n`;
+                } else {
+                    narrative += `La fascia mesorrectal está preservada.\n\n`;
+                }
+
+                narrative += `Estadiaje Ganglionar:\n`;
+                narrative += `- Compartimento mesorrectal: ${mesoNodes === 'Yes' ? 'Presencia de adenopatías sospechosas (' + mesoText + ').' : 'Sin evidencias de adenopatías significativas.'}\n`;
+                narrative += `- Cadenas laterales pélvicas regionales: ${latNodes === 'Yes' ? 'Afectación ganglionar patológica detectada en: ' + latText : 'No se identifican ganglios laterales sospechosos.'}\n`;
+                narrative += `- Depósitos tumorales (TDs): ${td === 'Yes' ? 'Imágenes compatibles con depósitos tumorales de contorno irregular adyacentes a vasos sanguíneos (' + tdText + ').' : 'No se aprecian depósitos tumorales mesorrectales discretos.'}\n`;
+                if (cmNodes === 'Yes') narrative += `- Estaciones no regionales (cM+): Se identifican adenopatías sospechosas. Detalles: ${cmText}.\n`;
+                narrative += `De acuerdo con los factores de riesgo integrados del paciente, la sospecha global de afectación ganglionar se clasifica como: ${cnEst}.\n\n`;
+
+                narrative += `Otros hallazgos:\n${otherFindingsText || 'Sin hallazgos significativos adicionales.'}\n\n`;
+                narrative += `CONCLUSIÓN:\n${conclusionText || 'Estadiaje local estructurado completado.'}`;
+            } 
+            else if (lang === 'ca') {
+                narrative = `ESTUDI DE RESONÀNCIA MAGNÈTICA DE RECTE (ESTADIATGE PRIMARI - ESGAR 2026)\n\n`;
+                narrative += `Troballes locals de la lesió:\n`;
+                narrative += `S'identifica una massa rectal de composició estructural principalment ${comp.toLowerCase()} i morfologia de tipus ${shape.toLowerCase()}`;
+                if (rawShape === 'Partly annular' && document.getElementById('shape-hours-from').value) {
+                    narrative += ` que s'estén des de les ${document.getElementById('shape-hours-from').value} fins a les ${document.getElementById('shape-hours-to').value} en les agulles del rellotge`;
+                }
+                narrative += `. El tumor presenta una longitud màxima de ${length || '___'} cm. El seu marge inferior es localitza a una distància de ${distArj || '___'} cm de la unió anorrectal`;
+                if (distAv) narrative += ` i a ${distAv} cm del marge anal`;
+                
+                let textSto = (rawSto === 'At/below (rectum)') ? "en o per sota del nivell del Take-Off Sigmoïdal" : "per sobre del Take-Off Sigmoïdal, orientant a una neoplàsia de sigma";
+                narrative += `. La lesió es situa ${textSto}. `;
+
+                if (rawPeritoneal === 'Straddles') {
+                    narrative += `En el sentit craniocaudal, la lesió creua la reflexió peritoneal anterior`;
+                    if (document.getElementById('peritoneal-text').value) {
+                        narrative += ` (${document.getElementById('peritoneal-text').value})`;
+                    }
+                    narrative += `.\n\n`;
+                } else {
+                    narrative += `En sentit craniocaudal, la seva relació amb la reflexió peritoneal anterior és: ${peritoneal.toLowerCase()}.\n\n`;
+                }
+                
+                narrative += `Extensió extramural i categoria T:\n`;
+                narrative += `El comportament i la invasió de les capes parietals defineixen una categoria clínica ${ct}. `;
+                if (ct === 'cT4b') {
+                    const checkedStructs = Array.from(document.querySelectorAll('input[name="t4b_struct"]:checked')).map(el => {
+                        return el.value === 'Pelvic organs' ? 'òrgans pèlvics' : el.value === 'Pelvic floor/sidewall muscles' ? 'músculs del sòl/paret pèlvica' : el.value === 'External anal sphincter' ? 'esfínter anal extern' : 'os';
+                    });
+                    narrative += `Es constata afectació macroscòpica directa de: ${checkedStructs.length > 0 ? checkedStructs.join(', ') : 'estructures no especificades'}. `;
+                    if(document.getElementById('ct4b-custom-text').value) narrative += `Detalls de la invasió pèlvica: ${document.getElementById('ct4b-custom-text').value}. `;
+                }
+                if (sphincter !== 'No' && sphincter !== t['rep-not-eval']) {
+                    narrative += `Al segment distal s'identifica invasió del ${sphincterOut.toLowerCase()}`;
+                    if(document.getElementById('sphincter-custom-text').value) narrative += ` (${document.getElementById('sphincter-custom-text').value})`;
+                    narrative += `. `;
+                } else {
+                    narrative += `No s'observa infiltració de l'aparell esfinterià. `;
+                }
+                narrative += `L'estudi de la invasió vascular extramural (EMVI) es considera ${formData.get('emvi') === 'Yes' ? 'POSITIU (Grau 3-4)' : 'NEGATIU'}.\n\n`;
+
+                narrative += `Fàscia Mesorrectal (FMR):\n`;
+                if (formData.get('mrf') === 'Yes') {
+                    const mrfCauses = Array.from(document.querySelectorAll('input[name="mrf_cause"]:checked')).map(el => el.value === 'Primary tumour' ? 'tumor primari' : el.value === 'EMVI' ? 'EMVI' : 'ganglis/dipòsits irregulars');
+                    narrative += `La fàscia mesorrectal es troba compromesa (marge lliure de tumor directe o estructures de risc <= 1 mm) a les ${document.getElementById('mrf-clock').value || '___'} en sentit horari, secundari a: ${mrfCauses.join(', ')}.\n\n`;
+                } else {
+                    narrative += `La fàscia mesorrectal està preservada.\n\n`;
+                }
+
+                narrative += `Estadiatge Ganglionar:\n`;
+                narrative += `- Compartiment mesorrectal: ${mesoNodes === 'Yes' ? 'Presència d\'adenopaties sospitoses (' + mesoText + ').' : 'Sense evidències d\'adenopaties significatives.'}\n`;
+                narrative += `- Cadenes laterals pèlviques regionals: ${latNodes === 'Yes' ? 'Afectació ganglionar patològica detectada a: ' + latText : 'No s\'identifiquen ganglis laterals sospitosos.'}\n`;
+                narrative += `- Dipòsits tumorals (TDs): ${td === 'Yes' ? 'Imatges compatibles amb dipòsits tumorals de contorn irregular adjacents a vasos sanguinis (' + tdText + ').' : 'No s\'aprecien dipòsits tumorals mesorrectals discrets.'}\n`;
+                if (cmNodes === 'Yes') narrative += `- Estacions no regionals (cM+): S'identifiquen adenopaties sospitoses. Detalls: ${cmText}.\n`;
+                narrative += `D'acord amb els factors de risc integrats del pacient, la sospita global d'afectació ganglionar es classifica com: ${cnEst}.\n\n`;
+
+                narrative += `Altres troballes:\n${otherFindingsText || 'Sense troballes significatives addicionals.'}\n\n`;
+                narrative += `CONCLUSIÓ:\n${conclusionText || 'Estadiatge local estructurat completat.'}`;
+            } 
+            else {
+                // ENGLISH
+                narrative = `RECTAL MRI REPORT FOR PRIMARY STAGING (ESGAR 2026)\n\n`;
+                narrative += `Local tumour characteristics:\n`;
+                narrative += `A rectal mass is identified, demonstrating a predominantly ${comp.toLowerCase()} composition and a ${shape.toLowerCase()} appearance`;
+                if (rawShape === 'Partly annular' && document.getElementById('shape-hours-from').value) {
+                    narrative += ` extending from ${document.getElementById('shape-hours-from').value} to ${document.getElementById('shape-hours-to').value} o'clock`;
+                }
+                narrative += `. The tumour has a maximum craniocaudal length of ${length || '___'} cm. The lower border is located ${distArj || '___'} cm from the anorectal junction`;
+                if (distAv) narrative += ` and ${distAv} cm from the anal verge`;
+                
+                let textSto = (rawSto === 'At/below (rectum)') ? "at or below the level of the Sigmoid Take-Off" : "above the Sigmoid Take-Off, indicating a sigmoid colon lesion";
+                narrative += `. The mass is located ${textSto}. `;
+                
+                if (rawPeritoneal === 'Straddles') {
+                    narrative += `Craniocaudally, the lesion straddles the anterior peritoneal reflection`;
+                    if (document.getElementById('peritoneal-text').value) {
+                        narrative += ` (${document.getElementById('peritoneal-text').value})`;
+                    }
+                    narrative += `.\n\n`;
+                } else {
+                    narrative += `Its relation to the anterior peritoneal reflection is: ${peritoneal.toLowerCase()}.\n\n`;
+                }
+                
+                narrative += `Extramural extension and T-category:\n`;
+                narrative += `The depth of parietal invasion corresponds to a clinical category ${ct}. `;
+                if (ct === 'cT4b') {
+                    const checkedStructs = Array.from(document.querySelectorAll('input[name="t4b_struct"]:checked')).map(el => el.value.toLowerCase());
+                    narrative += `Direct macroscopic invasion is noted into: ${checkedStructs.join(', ')}. `;
+                    if(document.getElementById('ct4b-custom-text').value) narrative += `Pelvic extension notes: ${document.getElementById('ct4b-custom-text').value}. `;
+                }
+                if (sphincter !== 'No' && sphincter !== t['rep-not-eval']) {
+                    narrative += `Distal evaluation reveals invasion of the ${sphincterOut.toLowerCase()}`;
+                    if(document.getElementById('sphincter-custom-text').value) narrative += ` (${document.getElementById('sphincter-custom-text').value})`;
+                    narrative += `. `;
+                } else {
+                    narrative += `No anal sphincter complex infiltration is observed. `;
+                }
+                narrative += `Extramural Vascular Invasion (EMVI) status is: ${formData.get('emvi') === 'Yes' ? 'POSITIVE (Grade 3-4)' : 'NEGATIVE'}.\n\n`;
+
+                narrative += `Mesorectal Fascia (MRF):\n`;
+                if (formData.get('mrf') === 'Yes') {
+                    const mrfCauses = Array.from(document.querySelectorAll('input[name="mrf_cause"]:checked')).map(el => el.value.toLowerCase());
+                    narrative += `The mesorectal fascia is involved (clear margin <= 1 mm) at ${document.getElementById('mrf-clock').value || '___'} o'clock, mediated by: ${mrfCauses.join(', ')}.\n\n`;
+                } else {
+                    narrative += `The mesorectal fascia is preserved.\n\n`;
+                }
+
+                narrative += `Nodal Staging:\n`;
+                narrative += `- Mesorectal compartment: ${mesoNodes === 'Yes' ? 'Suspicious lymph nodes noted (' + mesoText + ').' : 'No suspicious mesorectal nodes identified.'}\n`;
+                narrative += `- Lateral pelvic regional chains: ${latNodes === 'Yes' ? 'Pathological regional lateral nodes identified in: ' + latText : 'No suspicious lateral regional lymph nodes visualized.'}\n`;
+                narrative += `- Tumour deposits (TDs): ${td === 'Yes' ? 'Irregular nodules contiguous with venous structures present (' + tdText + ').' : 'No discrete tumour deposits seen.'}\n`;
+                if (cmNodes === 'Yes') narrative += `- Non-regional stations (cM+): Suspicious distant nodes seen. Details: ${cmText}.\n`;
+                narrative += `Based on the combined pelvic risk profile, the overall nodal category is provisionally estimated as: ${cnEst}.\n\n`;
+
+                narrative += `Other findings:\n${otherFindingsText || 'No additional significant findings.'}\n\n`;
+                narrative += `CONCLUSION:\n${conclusionText || 'Structured primary local staging complete.'}`;
+            }
+
+            document.getElementById('report-narrative').value = narrative;
+            
+            // REDIMENSIONADO AUTOMÁTICO DE LA CAJA NARRATIVA
+            const narrTA = document.getElementById('report-narrative');
+            narrTA.style.height = 'auto'; // Resetear para poder calcular la altura real
+            narrTA.style.height = (narrTA.scrollHeight + 5) + 'px'; // Añadir altura del contenido más un ligero padding
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById('lang-select').value = 'es';
+            changeLanguage();
+        });
+    </script>
+</body>
+</html>
